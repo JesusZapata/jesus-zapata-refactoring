@@ -3,7 +3,6 @@
 public function post_confim() {
     $id = Input::get('service_id');
     $servicio = Service::find($id);
-    //dd($servicio)
     if ($servicio != NULL) {
         if ($servicio->status_id == '6') {
             return Response::json(array('error' => '2'));
