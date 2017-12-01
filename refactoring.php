@@ -3,6 +3,7 @@
 public function post_confim() {
     $id = Input::get('service_id');
     $service = Service::find($id);
+    $driver_id = Input::get('driver_id');
     if (!$service) {
         return Response::json(array('error' => Error::ServiceNotFound));
     }
@@ -13,13 +14,13 @@ public function post_confim() {
         return Response::json(array('error' => Error::One));
     }
     $services = Service::update($id, array(
-                    'driver_id' => Input::get('driver_id'),
+                    'driver_id' => $driver_id,
                     'status_id' => '2'
     ));
-    Driver::update(Input::get('driver_id'), array(
+    Driver::update($driver_id, array(
         "available" => '0'
     ));
-    $driverTmp = Driver::find(Input::get('driver_id'));
+    $driverTmp = Driver::find($driver_id);
     Service::update($id, array(
         'car_id' => $driverTmp->car_id
     ));
