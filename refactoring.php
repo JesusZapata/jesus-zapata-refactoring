@@ -2,13 +2,13 @@
 
 public function post_confim() {
     $id = Input::get('service_id');
-    $servicio = Service::find($id);
-    if ($servicio != NULL) {
-        if ($servicio->status_id == '6') {
+    $service = Service::find($id);
+    if ($service != NULL) {
+        if ($service->status_id == '6') {
             return Response::json(array('error' => '2'));
         }
-        if ($servicio->driver_id == NULL && $servicio->status_id == '1') {
-            $servicios = Service::update($id, array(
+        if ($service->driver_id == NULL && $service->status_id == '1') {
+            $services = Service::update($id, array(
                          'driver_id' => Input::get('driver_id'),
                          'status_id' => '2'
                             //Up Carro
@@ -21,24 +21,24 @@ public function post_confim() {
             Service::update($id, array(
                 'car_id' => $driverTmp->car_id
             ));
-            //Notificar a usuario!
+            //  Notify to the user
             $pushMessage = 'Tu servicio ha sido confirmado!';
-            /*  $servicio = Service::find($id);
+            /*  $service = Service::find($id);
                 $push = Push::make();
-                if ($servicio->user->type == '1) {//iPhone
-                $pushAns = $push->ios($servicio->user->uuid, $pushMessage);
+                if ($service->user->type == '1) {//iPhone
+                $pushAns = $push->ios($service->user->uuid, $pushMessage);
                 } else {
-                $pushAns = $push->android($servicio->user->uuid, $pushMessage);
+                $pushAns = $push->android($service->user->uuid, $pushMessage);
                 }*/
-            $servicio = Service::find($id);
+            $service = Service::find($id);
             $push = Push::make();
-            if ($servicio->user-uuid == '') {
+            if ($service->user-uuid == '') {
                 return Response::json(array('error' => '0'));
             }
-            if ($servicio->user->type == '1') {//iphone
-                $result = $push->ios($servicio->user->uuid, $pushMessage, 1, 'honk.wav', 'Open', array('serviceId' => $servicio->id));
+            if ($service->user->type == '1') {//iphone
+                $result = $push->ios($service->user->uuid, $pushMessage, 1, 'honk.wav', 'Open', array('serviceId' => $service->id));
             } else {
-                $result = $push->android2($servicio->user->uuid, $pushMessage, 1, 'default', 'Open', array('serviceId' => $servicio->id));
+                $result = $push->android2($service->user->uuid, $pushMessage, 1, 'default', 'Open', array('serviceId' => $service->id));
             }
             return Response::json(array('error' => '0'));
         } else {
